@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f2f6f6;
+}
+
+/* TOP BAR */
+.top-section {
+    background-color: #1abc9c;
+    color: white;
+    padding: 20px;
+}
+
+.top-section h1 {
+    margin: 0;
+}
+
+.nav {
+    margin-top: 10px;
+}
+
+.nav li {
+    display: inline;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+/* OVERVIEW */
+.overview {
+    padding: 20px;
+    background-color: #f0f3f4;
+}
+
+/* CATEGORIES */
+.categories {
+    background-color: #fdeca6;
+    padding: 20px;
+}
+
+.categories ul li {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+/* PRODUCT TABLE */
+.product-table {
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: center;
+}
+
+/* CART */
+.cart-section {
+    background-color: #fdf2e9;
+    padding: 20px;
+}
+
+/* OFFERS */
+.offers {
+    background-color: #f8c1b8;
+    padding: 20px;
+}
+
+/* FOOTER */
+.footer {
+    background-color: black;
+    color: white;
+    height: 40px;
+    overflow: hidden;
+}
+
+.moving-text {
+    position: relative;
+    animation: move 10s linear infinite;
+}
+
+@keyframes move {
+    from { left: -100%; }
+    to { left: 100%; }
+}
+
+button {
+    padding: 5px 10px;
+}
