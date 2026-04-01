@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EasyShopping — Login</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Login-specific styles (inline so this file is self-contained) -->
+  <style>
+    /* ── CSS Variables (mirrors styles.css for brand consistency) ── */
+    :root {
+      --clr-primary:    #c8522b;
+      --clr-primary-dk: #a33e1e;
+      --clr-accent:     #f2c078;
+      --clr-dark:       #1a1208;
+      --clr-mid:        #4a3728;
+      --clr-light:      #fdf6ef;
+      --clr-muted:      #8a7060;
+      --clr-border:     #e5d8cc;
+      --clr-success:    #2e7d51;
+      --ff-heading: 'Playfair Display', Georgia, serif;
+      --ff-body:    'DM Sans', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 24px;
+      --shadow-lg:  0 16px 48px rgba(0,0,0,.18);
+      --ease: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+
+    body {
+      font-family: var(--ff-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #1a1208 0%, #2d1e0f 40%, #3d2810 70%, #1a1208 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Decorative background elements ── */
+    .bg-dots {
+      position: fixed; inset: 0;
+      opacity: 0.035;
+      background-image: radial-gradient(circle, #f2c078 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .bg-blob {
+      position: fixed; border-radius: 50%;
+      filter: blur(90px); pointer-events: none;
+    }
+    .bg-blob-1 { width: 500px; height: 500px; background: rgba(200,82,43,.22); top: -150px; right: -150px; }
+    .bg-blob-2 { width: 380px; height: 380px; background: rgba(242,192,120,.1);  bottom: -120px; left: -120px; }
+    .bg-blob-3 { width: 250px; height: 250px; background: rgba(200,82,43,.08);  top: 40%; left: 40%; }
+
+    /* ── Login Card ── */
+    .login-card {
+      position: relative; z-index: 2;
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 52px 48px;
+      width: 100%; max-width: 480px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+      animation: cardEntrance .7s cubic-bezier(.22,.68,0,1.15) both;
+    }
+    @keyframes cardEntrance {
+      from { opacity: 0; transform: translateY(50px) scale(.94); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── Logo ── */
+    .login-logo {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 40px;
+    }
+    .login-logo-icon { font-size: 2.4rem; animation: spin 20s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .login-logo-text {
+      font-family: var(--ff-heading);
+      font-size: 1.7rem; color: #fff;
+    }
+    .login-logo-text strong { color: var(--clr-accent); }
+    .login-logo-tagline {
+      font-size: 0.72rem; color: rgba(255,255,255,.3);
+      letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px;
+    }
+
+    /* ── Headings ── */
+    .login-title {
+      font-family: var(--ff-heading);
+      font-size: 2.2rem; font-weight: 700;
+      color: #fff; margin-bottom: 6px;
+    }
+    .login-subtitle {
+      color: rgba(255,255,255,.45);
+      font-size: 0.9rem; margin-bottom: 36px;
+    }
+
+    /* ── Form Groups ── */
+    .form-group { margin-bottom: 22px; }
+    .form-group label {
+      display: block;
+      font-size: 0.77rem; font-weight: 600;
+      color: rgba(255,255,255,.5);
+      letter-spacing: 1.2px; text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all var(--ease);
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,.2); }
+    .form-group input:focus {
+      background: rgba(255,255,255,.11);
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px rgba(242,192,120,.13);
+    }
+
+    /* ── Error box ── */
+    .login-error {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      background: rgba(192,57,43,.15);
+      border: 1px solid rgba(192,57,43,.35);
+      border-radius: var(--radius-sm);
+      color: #e07060;
+      font-size: 0.87rem;
+    }
+
+    /* ── Sign-in button ── */
+    .btn-signin {
+      width: 100%; padding: 15px;
+      background: var(--clr-primary);
+      color: #fff; border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--ff-body);
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer;
+      transition: all var(--ease);
+      letter-spacing: 0.5px;
+      margin-top: 6px;
+    }
+    .btn-signin:hover {
+      background: var(--clr-primary-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(200,82,43,.5);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 16px;
+      margin: 26px 0;
+    }
+    .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,.1); }
+    .divider span { color: rgba(255,255,255,.28); font-size: 0.8rem; }
+
+    /* ── Guest button ── */
+    .btn-guest {
+      width: 100%; padding: 13px;
+      background: transparent;
+      color: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--radius-sm);
+      font-family: var(--ff-body);
+      font-size: 0.9rem; font-weight: 500;
+      cursor: pointer;
+      transition: all var(--ease);
+    }
+    .btn-guest:hover {
+      background: rgba(255,255,255,.08);
+      color: #fff; border-color: rgba(255,255,255,.3);
+    }
+
+    /* ── Demo hint ── */
+    .demo-hint {
+      text-align: center;
+      color: rgba(255,255,255,.2);
+      font-size: 0.74rem;
+      margin-top: 18px;
+    }
+
+    /* ── Feature tiles ── */
+    .features-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+    .feature-tile {
+      display: flex; align-items: center; gap: 9px;
+      color: rgba(255,255,255,.35);
+      font-size: 0.78rem;
+    }
+    .feature-tile .feat-icon { font-size: 1.05rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .login-card { padding: 36px 26px; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background decoration -->
+  <div class="bg-dots"></div>
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+
+  <!-- Login Card -->
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <span class="login-logo-icon">🛍</span>
+      <div>
+        <div class="login-logo-text">Easy<strong>Shopping</strong></div>
+        <div class="login-logo-tagline">Discover · Shop · Enjoy</div>
+      </div>
+    </div>
+
+    <h1 class="login-title">Welcome Back</h1>
+    <p class="login-subtitle">Sign in to access exclusive deals &amp; your cart</p>
+
+    <!-- Error message -->
+    <div class="login-error" id="loginError"></div>
+
+    <!-- Form -->
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+    </div>
+
+    <button class="btn-signin" id="signinBtn" onclick="doLogin()">Sign In &rarr;</button>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>or</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <button class="btn-guest" onclick="guestLogin()">&#128100; Continue as Guest</button>
+
+    <p class="demo-hint">Demo: any valid email + any password to sign in</p>
+
+    <!-- Feature tiles -->
+    <div class="features-grid">
+      <div class="feature-tile"><span class="feat-icon">🚚</span><span>Free Delivery</span></div>
+      <div class="feature-tile"><span class="feat-icon">🔒</span><span>Secure Shopping</span></div>
+      <div class="feature-tile"><span class="feat-icon">🎁</span><span>Exclusive Offers</span></div>
+      <div class="feature-tile"><span class="feat-icon">⚡</span><span>Fast Checkout</span></div>
+    </div>
+
+  </div><!-- /login-card -->
+
+  <script>
+    /* ─── Login Logic ─── */
+    function isValidEmail(e) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    }
+
+    function doLogin() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const pass  = document.getElementById("loginPassword").value.trim();
+      const err   = document.getElementById("loginError");
+
+      if (!email || !pass) {
+        showError("⚠ Please fill in both email and password.");
+        return;
+      }
+      if (!isValidEmail(email)) {
+        showError("⚠ Please enter a valid email address.");
+        return;
+      }
+
+      // Accept any valid-format credentials (demo mode)
+      err.style.display = "none";
+
+      // Derive display name from email prefix
+      const name = email.split("@")[0]
+        .replace(/[._]/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+
+      // Store session info and redirect
+      sessionStorage.setItem("es_user", JSON.stringify({ name, isGuest: false }));
+      window.location.href = "index.html";
+    }
+
+    function guestLogin() {
+      sessionStorage.setItem("es_user", JSON.stringify({ name: "Guest", isGuest: true }));
+      window.location.href = "index.html";
+    }
+
+    function showError(msg) {
+      const err = document.getElementById("loginError");
+      err.textContent = msg;
+      err.style.display = "block";
+    }
+
+    /* Allow pressing Enter to submit */
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") doLogin();
+    });
+
+    /* Redirect to shop if already logged in */
+    if (sessionStorage.getItem("es_user")) {
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
